@@ -71,7 +71,8 @@
 #define METADATA_TOKEN_PROTOCOL_VERSION_SHORT 0x41
 
 /* Device config flags */
-#define DEVICE_FLAG_IS_DEMON_CORE (1 << 0)
+#define DEVICE_FLAG_IS_DEMON_CORE   (1 << 0)
+#define DEVICE_FLAG_SAMPLE_ASCEDING (1 << 1)    /* sample data order */
 
 /* Basic Trigger Config */
 #define TRIGGER_START              (1 << 3)

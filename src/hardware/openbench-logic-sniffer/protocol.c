@@ -182,6 +182,10 @@ static void ols_metadata_quirks(struct sr_dev_inst *sdi)
 			devc->max_samplerate = SR_MHZ(20);
 	}
 
+	if (sdi->model && strcmp(sdi->model, "AGLAv0") == 0) {
+		devc->device_flags |= DEVICE_FLAG_SAMPLE_ASCEDING;
+	}
+
 	if (sdi->version && strstr(sdi->version, "FPGA version 3.07"))
 		devc->device_flags |= DEVICE_FLAG_IS_DEMON_CORE;
 }
@@ -500,7 +504,10 @@ SR_PRIV int ols_receive_data(int fd, int revents, void *cb_data)
 			 * store it in reverse order here, so we can dump
 			 * this on the session bus later.
 			 */
-			offset = (devc->limit_samples - devc->num_samples) * 4;
+                        if (devc->device_flags & DEVICE_FLAG_SAMPLE_ASCEDING)
+				offset = (devc->num_samples - 1) * 4;
+			else
+				offset = (devc->limit_samples - devc->num_samples) * 4;
 			for (i = 0; i <= devc->rle_count; i++) {
 				memcpy(devc->raw_sample_buf + offset + (i * 4),
 				       devc->sample, 4);
